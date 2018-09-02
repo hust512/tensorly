@@ -1,7 +1,7 @@
 # L_SVD_Coding
 
-This is the L_SVD coding including:
+We implement the L_SVD tensor decomposition:
 
-1)L_SVD decomposition with fft&dct
+1) L_SVD decomposition with the transform being fft, dct, dwt
 
-2)L_SVD compress
+2) L_SVD compress for videos
