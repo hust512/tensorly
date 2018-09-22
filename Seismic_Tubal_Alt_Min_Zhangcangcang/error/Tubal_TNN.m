@@ -3,7 +3,7 @@ clear all;
 close all;
 % profile ong
 
-% data loading
+%% data loading
 % load('T_synthetic_tuabl_rank_3_32_32_300.mat');%T = T(11:21, 11:21, 81:200); %
 load('T_synthetic_tuabl_rank_2.mat');% T = T(:, :, 1:256);   %加载我们自己合成的人工合成数据;
 % load('T_synthetic_tuabl_rank_3.mat'); T = T(1:11, 1:11, 1:120);   %加载我们自己合成的人工合成数据;
@@ -23,7 +23,7 @@ srs = [0.05 : 0.05 : 0.2];
 sampling_rse = zeros(2, length(srs));
 T1 = T;
 
-for i = 1 : 5
+for i = 1 : 10
 for loop = 1 : length(srs)
     samplingrate = srs(loop);
     MatOmega1 = randsample([0 1],szT(3),true,[samplingrate, 1-samplingrate]);
@@ -123,7 +123,7 @@ omega_f = fft(omega, [], 3);
    sampling_rse(:, loop) = sampling_rse(:, loop) + RSE(:);
 end
 end
-sampling_rse = sampling_rse ./ 5;
+sampling_rse = sampling_rse ./ 10;
 
 
 % 绘制收敛速度
