@@ -21,40 +21,32 @@ load('T_synthetic_tuabl_rank_2.mat');T = T(:, :, 1:256);   %加载我们自己合成的人
 
 szT = size(T);   
 tubalRank = LowTubalCDF(T, 1);
-r = tubalRank;
-
-%%  Tubal sampling  +  noised  %%%
-% % T1 = generatedata (T,1);
-% samplingRate = 0.5;
-% T1 = T;
-% szT = size(T1);
-% Omega = repmat((rand(szT(1:2)) > samplingRate), [1, 1, szT(3)]);
-% T2 = T1;
-% T2(Omega) = 0; 
-% Omega = abs(1 - Omega);
- 
+% r = tubalRank;
 
 
 %% transform dimension
-T1 = permute(T,[3,1,2]);
+T1 = permute(T,[3,1,2]);% 时间维成为第一维，第三维为crossline，crossline缺失。
 
 %% tubalRank after transform dimension
 tubalRank2 = LowTubalCDF(T1, 1);
-% % tSVD分解后，S中的元素在20的时候才会小于0
-r = tubalRank2;
-% r = 15;
+% % %tubal-rank为7，具体看tSVD分解后，S中的元素在i=20的时候才会小于0
+r = tubalRank2;  
+% r = 20;  
 
 %% Slice sampling
 szT1 = size(T1);
 samplingrate = 0.01;
-MatOmega1 = randsample([0 1],szT1(3),true,[samplingrate, 1-samplingrate]);
+MatOmega = randsample([0 1],szT1(3),true,[samplingrate, 1-samplingrate]);
 omega = ones(szT1(1),szT1(2),szT1(3));
 for k=1:szT1(3)
-    if(MatOmega1(k)==0)
+    if(MatOmega(k)==0)
        omega(:,:,k)=zeros(szT1(1),szT1(2));
     end
 end
-%% 5-th frontal slice missing
+
+
+%% 5-th frontal slice missing  
+%最终画图画第五个slice,第五个面缺失主要是为了画图方便
 omega(:,:,5)=zeros(szT1(1),szT1(2));
 
 
@@ -108,9 +100,8 @@ Y_est = ifft(Y_f, [], 3);
 T_est = tprod(X_est, Y_est);
 RSE =  norm(T_est(:) - T(:)) / norm(T(:));
 
-T_omega(:,:,52)=zeros(szT1(1),szT1(2));
 
-%% figure
+%% figure 画第五个slice。
 figure;
 subplot(1,3,1);
 SeisPlot(T(:,5, :),{'figure', 'old'});
